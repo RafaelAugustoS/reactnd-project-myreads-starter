@@ -3,6 +3,7 @@ import './App.css'
 import Currently from './components/Currently'
 import WantToRead from './components/WantToRead'
 import Read from './components/Read'
+import { Link } from 'react-router-dom'
 
 import Search from './views/Search'
 
@@ -35,7 +36,9 @@ class BooksApp extends Component {
 						</div>
 					</div>
 					<div className="open-search">
-						<a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
+						<Link to="/create">
+							Add a book
+						</Link>
 					</div>
 				</div>
 			</div>
