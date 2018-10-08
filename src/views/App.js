@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import './App.css'
-import Currently from './components/Currently'
-import WantToRead from './components/WantToRead'
-import Read from './components/Read'
+import '../App.css'
+import Currently from '../components/Currently'
+import WantToRead from '../components/WantToRead'
+import Read from '../components/Read'
 import { Link } from 'react-router-dom'
 
-import Search from './views/Search'
+import Search from './Search'
 
 class BooksApp extends Component {
 	state = {
