@@ -9,6 +9,7 @@ class Search extends Component {
         
         this.state = {
             inputText: '',
+            myBooks: [],
             result: [],
             message: ''
         }
@@ -16,14 +17,40 @@ class Search extends Component {
         this.send = debounce(this.send, 300)
     }
 
+    componentDidMount(){
+        this._callApi()
+    }
+
+    async _callApi(){
+        const res = await BooksAPI.getAll()
+
+        this.setState({myBooks: res})
+	}
+
     async send(){
         try{
             if(this.state.inputText.length > 0){
                 const result = await BooksAPI.search(this.state.inputText)
 
                 if(!result.error){
-                    console.log(result)
-                    this.setState({result: result, message: ''})
+                    let arr = []
+                    let x
+                    for(x in result){
+                        console.log(result[x])
+                        this.state.myBooks.map(my => {
+                            if(result[x].id === my.id){
+                                let obj = result[x]
+                                obj.shelf = my.shelf
+                                arr.push(obj)
+                            }else{
+                                let obj = result[x]
+                                obj.shelf = 'none'
+                                arr.push(obj)
+                            }
+                        })
+                    }
+                    console.log(arr)
+                    //this.setState({result: result, message: ''})
                 }else{
                     this.setState({result: result.items, message: result.error})
                 }   
