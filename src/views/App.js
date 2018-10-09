@@ -1,15 +1,64 @@
 import React, { Component } from 'react'
 import '../App.css'
-import Currently from '../components/Currently'
-import WantToRead from '../components/WantToRead'
-import Read from '../components/Read'
 import { Link } from 'react-router-dom'
-
-import Search from './Search'
+import * as BooksAPI from '../BooksAPI'
+import { Book } from '../components'
 
 class BooksApp extends Component {
 	state = {
-		showSearchPage: false
+		books: [],
+		select: ''
+	}
+
+	componentDidMount(){
+        this._callApi()
+    }
+
+    async _callApi(){
+        const res = await BooksAPI.getAll()
+
+        this.setState({books: res})
+	}
+	
+	async _update(book, value){
+		try{
+			const res = await BooksAPI.update(book, value)
+			this._callApi()
+		}catch(e){
+			console.log(e)
+		}
+	}
+
+	_renderCard(type){
+		const filter = this.state.books.filter(value => {
+            return value.shelf == type
+		})
+		
+		return filter.map(book => 
+			<li key={book.id}>
+				<div className="book">
+					<div className="book-top">
+						<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.thumbnail}")` }}></div>
+						<div className="book-shelf-changer">
+							<select 
+								value={book.shelf} 
+								onChange={(e) => this._update(book, e.target.value)}
+								ref={book.id}
+							>
+								<option value="move" disabled>Move to...</option>
+								<option value="currentlyReading">Currently Reading</option>
+								<option value="wantToRead">Want to Read</option>
+								<option value="read">Read</option>
+								<option value="none">None</option>
+							</select>
+						</div>
+					</div>
+
+					<div className="book-title">{book.title}</div>
+					<div className="book-authors">{book.authors[0]}</div>
+				</div>
+			</li>
+		)
 	}
 
 	render() {
@@ -23,20 +72,32 @@ class BooksApp extends Component {
 						<div>
 							<div className="bookshelf">
 								<h2 className="bookshelf-title">Currently Reading</h2>
-								<Currently />
+								<div className="bookshelf-books">
+                					<ol className="books-grid">
+										{this._renderCard('currentlyReading')}
+									</ol>
+								</div>
 							</div>
 							<div className="bookshelf">
 								<h2 className="bookshelf-title">Want to Read</h2>
-								<WantToRead />
+								<div className="bookshelf-books">
+                					<ol className="books-grid">
+										{this._renderCard('wantToRead')}
+									</ol>
+								</div>
 							</div>
 							<div className="bookshelf">
 								<h2 className="bookshelf-title">Read</h2>
-								<Read />
+								<div className="bookshelf-books">
+                					<ol className="books-grid">
+										{this._renderCard('read')}
+									</ol>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div className="open-search">
-						<Link to="/create">
+						<Link to="/search">
 							Add a book
 						</Link>
 					</div>

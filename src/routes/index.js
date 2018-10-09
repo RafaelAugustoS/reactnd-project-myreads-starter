@@ -10,7 +10,7 @@ class Routers extends Component {
         return(
             <div>
                 <Route exact path="/" component={App} />
-                <Route path="/create" component={Search} />                
+                <Route path="/search" component={Search} />                
             </div>
         )
     }
