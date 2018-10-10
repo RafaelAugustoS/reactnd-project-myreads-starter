@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import '../App.css'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from '../BooksAPI'
-import { Book } from '../components'
 
 class BooksApp extends Component {
 	state = {
@@ -22,7 +21,7 @@ class BooksApp extends Component {
 	
 	async _update(book, value){
 		try{
-			const res = await BooksAPI.update(book, value)
+			await BooksAPI.update(book, value)
 			this._callApi()
 		}catch(e){
 			console.log(e)
@@ -31,7 +30,7 @@ class BooksApp extends Component {
 
 	_renderCard(type){
 		const filter = this.state.books.filter(value => {
-            return value.shelf == type
+            return value.shelf === type
 		})
 		
 		return filter.map(book => 
@@ -55,7 +54,7 @@ class BooksApp extends Component {
 					</div>
 
 					<div className="book-title">{book.title}</div>
-					<div className="book-authors">{book.authors[0]}</div>
+					<div className="book-authors">{book.authors.join(', ')}</div>
 				</div>
 			</li>
 		)
