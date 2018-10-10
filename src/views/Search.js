@@ -33,24 +33,14 @@ class Search extends Component {
                 const result = await BooksAPI.search(this.state.inputText)
 
                 if(!result.error){
-                    let arr = []
-                    let x
-                    for(x in result){
-                        console.log(result[x])
-                        this.state.myBooks.map(my => {
-                            if(result[x].id === my.id){
-                                let obj = result[x]
-                                obj.shelf = my.shelf
-                                arr.push(obj)
-                            }else{
-                                let obj = result[x]
-                                obj.shelf = 'none'
-                                arr.push(obj)
+                    result.map(item => {
+                        this.state.myBooks.forEach((b, key) => {
+                            if(b.id === item.id){
+                                item.shelf = b.shelf
                             }
                         })
-                    }
-                    console.log(arr)
-                    //this.setState({result: result, message: ''})
+                    })
+                    this.setState({result: result, message: ''})
                 }else{
                     this.setState({result: result.items, message: result.error})
                 }   
@@ -78,7 +68,7 @@ class Search extends Component {
                         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${item.imageLinks ? item.imageLinks.thumbnail : ''}")` }}></div>
                         <div className="book-shelf-changer">
 							<select
-                                value={'none'} 
+                                value={item.shelf ? item.shelf : 'none'} 
                                 onChange={(e) => this.add(item, e.target.value)}
 							>
 								<option value="move" disabled>Move to...</option>
