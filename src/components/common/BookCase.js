@@ -1,28 +1,11 @@
 import React, { Component } from 'react'
-import * as BooksAPI from '../../BooksAPI'
 import { Book } from '../'
 
 class BookCase extends Component {
-    state = {
-        books: [],
-        select: '',
-        status: false
-    }
-
-    componentDidMount(){
-        this._callApi()
-    }
-
-    _callApi(){
-        BooksAPI.getAll()
-        .then(res => {
-            this.setState({books: res})
-        })
-    }
-
     _renderBook(){
         const type = this.props.title.split(' ').join('').toLowerCase()
-        const filter = this.state.books.filter(value => {
+        
+        const filter = this.props.books.filter(value => {
             return value.shelf.toLowerCase() === type
         })
         
@@ -30,7 +13,7 @@ class BookCase extends Component {
             <Book
                 Item={item}
                 key={item.id}
-                Handler={() => this._callApi()}
+                handle={() => this.props.handle()}
             />
         )
     }

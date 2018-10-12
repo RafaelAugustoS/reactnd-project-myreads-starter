@@ -15,18 +15,13 @@ class Search extends Component {
             message: ''
         }
 
-        this.send = debounce(this.send, 300)
+        this.send = debounce(this.send, 1000)
     }
 
-    componentDidMount(){
-        this._callApi()
-    }
-
-    async _callApi(){
+    async componentDidMount(){
         const res = await BooksAPI.getAll()
-
         this.setState({myBooks: res})
-	}
+    }
 
     async send(){
         try{

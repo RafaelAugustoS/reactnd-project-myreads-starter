@@ -1,31 +1,20 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import * as BooksAPI from '../../BooksAPI'
-import PropTypes from 'prop-types'
+import propTypes from 'prop-types'
 
-class Book extends Component {
-    static PropTypes = {
-        Imagem: PropTypes.string.isRequired,
-        Title: PropTypes.string.isRequired,
-        Author: PropTypes.string.isRequired
-    }
-
-    state = {
-        teste: ''
-    }
-
-    componentDidMount(){
-        console.log(this.props)
+class Book extends PureComponent {
+    static propTypes = {
+        Item: propTypes.object.isRequired
     }
 
     async _update(book, value){
 		try{
 			await BooksAPI.update(book, value)
-			this.props.Handler()
+		    this.props.handle()
 		}catch(e){
 			console.log(e)
 		}
-	}
-
+    }
 
     render(){
         const Item = this.props.Item
@@ -34,7 +23,7 @@ class Book extends Component {
             <li>
                 <div className="book">
                     <div className="book-top">
-                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${Item.imageLinks.thumbnail ? Item.imageLinks.thumbnail : ''}")` }}></div>
+                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${Item.imageLinks ? Item.imageLinks.thumbnail : ''}")` }}></div>
                         <div className="book-shelf-changer">
                             <select 
                                 onChange={(value) => this._update(Item, value.target.value)}
@@ -50,7 +39,7 @@ class Book extends Component {
                     </div>
 
                     <div className="book-title">{Item.title}</div>
-                    <div className="book-authors">{Item.author}</div>
+                    <div className="book-authors">{Item.authors ? Item.authors.join(', ') : ''}</div>
                 </div>
             </li>
         )

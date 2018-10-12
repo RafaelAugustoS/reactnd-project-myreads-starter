@@ -1,9 +1,23 @@
 import React, { Component } from 'react'
 import '../App.css'
+import * as BooksAPI from '../BooksAPI'
 import { Link } from 'react-router-dom'
 import { BookCase } from '../components'
 
 class BooksApp extends Component {
+	state = {
+		books: []
+	}
+
+	componentDidMount(){
+		this.loadBooks()
+	}
+	
+	loadBooks = async () => {
+		const books = await BooksAPI.getAll()
+		this.setState({books})
+	}
+
 	render() {
 		return (
 			<div className="app">
@@ -15,14 +29,20 @@ class BooksApp extends Component {
 						<div>
 							<BookCase
 								title="Currently Reading"
+								books={this.state.books}
+								handle={() => this.loadBooks()}
 							/>
 
 							<BookCase
 								title="Want To Read"
+								books={this.state.books}
+								handle={() => this.loadBooks()}
 							/>
 
 							<BookCase
 								title="Read"
+								books={this.state.books}
+								handle={() => this.loadBooks()}
 							/>
 						</div>
 					</div>
